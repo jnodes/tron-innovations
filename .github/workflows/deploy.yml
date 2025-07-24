@@ -1,1 +1,53 @@
-[Copy the entire deployment workflow content from the deploy.yml artifact]
+name: Production Deployment
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - production
+          - staging
+          - testnet
+
+env:
+  TRON_NETWORK: ${{ github.event.inputs.environment == 'testnet' && 'shasta' || 'mainnet' }}
+  NODE_ENV: production
+
+jobs:
+  pre-deploy-check:
+    name: Pre-deployment Validation
+    runs-on: ubuntu-latest
+    outputs:
+      should-deploy: ${{ steps.check.outputs.should-deploy }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check deployment conditions
+        id: check
+        run: echo "should-deploy=true" >> $GITHUB_OUTPUT
+
+  deploy-contracts:
+    name: Deploy Smart Contracts
+    runs-on: ubuntu-latest
+    needs: pre-deploy-check
+    environment: ${{ github.event.inputs.environment || 'production' }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.x'
+      - name: Deploy to TRON
+        env:
+          TRON_PRIVATE_KEY: ${{ secrets.TRON_DEPLOY_KEY }}
+        run: |
+          cd tron-ai-swarm
+          npm run contracts:deploy
