@@ -9,7 +9,7 @@
     "test": "jest"
   },
   "keywords": ["tron", "no-code", "dapp", "builder", "blockchain"],
-  "author": "Your Name",
+  "author": "jnodes",
   "license": "MIT",
   "dependencies": {
     "tronweb": "^5.0.0"
