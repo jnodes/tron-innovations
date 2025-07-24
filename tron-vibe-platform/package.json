@@ -1,0 +1,20 @@
+{
+  "name": "tron-vibe-platform",
+  "version": "1.0.0",
+  "description": "No-code DApp builder for TRON",
+  "main": "index.html",
+  "scripts": {
+    "dev": "live-server public",
+    "build": "webpack",
+    "test": "jest"
+  },
+  "keywords": ["tron", "no-code", "dapp", "builder", "blockchain"],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "tronweb": "^5.0.0"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  }
+}
